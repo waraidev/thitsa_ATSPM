@@ -123,3 +123,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+#Misc.
+node_modules
+simpls_engine/.DS_Store
