@@ -1,7 +1,18 @@
-﻿@page "/"
+﻿@inject IJSRuntime JSRuntime
 
-<h1>Hello, world!</h1>
+@page "/"
 
-Welcome to your new app.
+<p>Start Date: <input type="text" id="startDatepicker"></p>
+<p>End Date: <input type="text" id="endDatepicker"></p>
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+Signal ID: <input id="signalId" type="text"/>
+
+<button id="btnGetData" @onclick="GetTMCMetric">Get Data</button>
+<div id="ReportPlaceHolder"></div>
+
+@code{
+    public async Task GetTMCMetric()
+    {
+        await JSRuntime.InvokeVoidAsync("GetMetricLoop");
+    }
+}
