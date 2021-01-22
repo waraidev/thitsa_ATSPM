@@ -5,25 +5,28 @@ var headerStr="";
 var needHeader = true;
 var startDownloadDate="";
 var signalID=0;
+
 function GetMetricLoop()
 {
 	headerStr="";
 	str = "";
 	needHeader = true;
-	if($('#signalId').val() === "")
+
+	if(document.getElementById("signalId").val === "")
 	{
 		return;
 	}
-	$("#btnGetData").html("downloading");
-	startDownloadDate = $("#startDatepicker" ).datepicker({ dateFormat: 'dd-mm-yy' }).val();
+	//$("#btnGetData").html("downloading");
+	document.getElementById("btnGetData").html = "downloading";
+	startDownloadDate = document.getElementById("startDatepicker").val;
 	intervalVar = setInterval(UpdateAndSend, 5000);
-	signalID = $('#signalId').val();
+	signalID = document.getElementById("signalId").val;
 }
 
 function UpdateAndSend()
 {
 	
-	if(new Date($('#startDatepicker').val()) <= new Date($('#endDatepicker').val()))
+	if(new Date(document.getElementById("startDatepicker").val <= new Date(document.getElementById("endDatepicker").val)))
 	{
 		var tosend = {
 		EndDate: "",
@@ -39,10 +42,10 @@ function UpdateAndSend()
 		YAxisMax: "1000",
 		YAxisMin: undefined
 		};
-		var currentDate = $("#startDatepicker" ).datepicker({ dateFormat: 'dd-mm-yy' }).val();
-		tosend.StartDate = $('#startDatepicker').val() + " 12:00 AM";
-		tosend.EndDate = $('#startDatepicker').val() + " 11:59 PM";
-		tosend.SignalID = $('#signalId').val();
+		var currentDate = document.getElementById("startDatepicker").val;
+		tosend.StartDate = document.getElementById("startDatepicker").val + " 12:00 AM";
+		tosend.EndDate = document.getElementById("startDatepicker").val + " 11:59 PM";
+		tosend.SignalID = document.getElementById("signalId").val;
 		GetMetric(tosend,currentDate);
 		IncrementStartDate();
 	}
@@ -51,15 +54,15 @@ function UpdateAndSend()
 		clearInterval(intervalVar);
 		var fileName = "atspm_signalID_" + signalID +"_start_download_date_"+ startDownloadDate +".csv";
 		exportToCSV(headerStr+str, fileName ,'text/plain');
-		$("#btnGetData").html("GetData");
+		document.getElementById("btnGetData").html = "GetData";
 	}
 }
 
 function IncrementStartDate()
 {
-  	var date2 = $('#startDatepicker').datepicker('getDate', '+1d'); 
+  	var date2 = document.getElementById("startDatepicker").datepicker('getDate', '+1d'); 
   	date2.setDate(date2.getDate()+1); 
-  	$('#startDatepicker').datepicker('setDate', date2);
+  	document.getElementById("startDatepicker").datepicker('setDate', date2);
 }
 
 function GetMetric(tosend,currentDate)
@@ -73,8 +76,8 @@ function GetMetric(tosend,currentDate)
         contentType: "application/json; charset=utf-8",
         data: JSON.stringify(tosend),
         success: function (data) {
-            $('#ReportPlaceHolder').html(data);
-            $('#ReportPlaceHolder').focus();
+            document.getElementById("ReportPlaceHolder").html(data);
+            document.getElementById("ReportPlaceHolder").focus();
 	    gatherData(tosend,currentDate);
         },
         beforeSend: function () {
@@ -82,7 +85,7 @@ function GetMetric(tosend,currentDate)
         complete: function () {
         },
         error: function(xhr, status, error) {
-            $('#ReportPlaceHolder').html(xhr.responseText);
+            document.getElementById("ReportPlaceHolder").html(xhr.responseText);
         }
     });
 }
