@@ -1,0 +1,18 @@
+﻿@inject IJSRuntime JSRuntime
+
+@page "/"
+
+<p>Start Date: <input type="date" id="startDatepicker"></p>
+<p>End Date: <input type="date" id="endDatepicker"></p>
+
+Signal ID: <input id="signalId" type="text"/>
+
+<button id="btnGetData" @onclick="GetTMCMetric">Get Data</button>
+<div id="ReportPlaceHolder"></div>
+
+@code{
+    public async Task GetTMCMetric()
+    {
+        await JSRuntime.InvokeVoidAsync("GetMetricLoop");
+    }
+}

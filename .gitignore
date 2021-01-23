@@ -127,3 +127,8 @@ dmypy.json
 #Misc.
 node_modules
 simpls_engine/.DS_Store
+.vscode
+
+#Blazor
+simpls_frontend/bin
+simpls_frontend/obj
