@@ -60,9 +60,10 @@ function UpdateAndSend()
 
 function IncrementStartDate()
 {
-  	var date2 = document.getElementById("startDatepicker").datepicker('getDate', '+1d'); 
-  	date2.setDate(date2.getDate()+1); 
-  	document.getElementById("startDatepicker").datepicker('setDate', date2);
+	//var date2 = document.getElementById("startDatepicker").datepicker('getDate', '+1d');
+	var date2 = new Date(document.getElementById("startDatepicker").datepicker);
+  	date2.setDate(date2+1); 
+  	document.getElementById("startDatepicker").datepicker = date2;
 }
 
 function GetMetric(tosend,currentDate)
@@ -76,7 +77,7 @@ function GetMetric(tosend,currentDate)
         contentType: "application/json; charset=utf-8",
         data: JSON.stringify(tosend),
         success: function (data) {
-            document.getElementById("ReportPlaceHolder").html(data);
+            document.getElementById("ReportPlaceHolder").html = data;
             document.getElementById("ReportPlaceHolder").focus();
 	    gatherData(tosend,currentDate);
         },
@@ -85,7 +86,7 @@ function GetMetric(tosend,currentDate)
         complete: function () {
         },
         error: function(xhr, status, error) {
-            document.getElementById("ReportPlaceHolder").html(xhr.responseText);
+            document.getElementById("ReportPlaceHolder").html = xhr.responseText;
         }
     });
 }
