@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Ping from '@/components/Ping.vue';
-import Books from '@/components/Books.vue';
+import FileUpload from '@/components/FileUpload.vue';
+import Home from '@/components/Home.vue';
 
 Vue.use(Router);
 
@@ -10,14 +10,19 @@ export default new Router({
   base: process.env.BASE_URL,
   routes: [
     {
-      path: '/',
-      name: 'Books',
-      component: Books,
+      path: '/upload',
+      name: 'FileUpload',
+      component: FileUpload,
     },
     {
-      path: '/ping',
-      name: 'Ping',
-      component: Ping,
+      path: '/analysis',
+      name: 'FileUpload',
+      component: FileUpload,
+    },
+    {
+      path: '/',
+      name: 'Home',
+      component: Home,
     },
   ],
 });
