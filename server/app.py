@@ -1,13 +1,12 @@
 import os
 import uuid
 
-from flask import Flask, jsonify, request, flash, make_response
+from flask import Flask, json, jsonify, request, flash, make_response
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 
 path = os.path.abspath(os.path.dirname(__file__))
 UPLOAD_FOLDER = os.path.join(path, "upload/")
-ALLOWED_EXTENSIONS = {'csv'}
 
 # configuration
 DEBUG = True
@@ -23,16 +22,6 @@ app.secret_key = uuid.uuid4().hex
 CORS(app)
 
 
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-
-# sanity check route
-@app.route('/ping', methods=['GET'])
-def ping_pong():
-    return jsonify('pong!')
-
-
 @app.route('/files', methods=['POST'])
 def uploadFiles():
     if request.method == 'POST':
@@ -44,7 +33,7 @@ def uploadFiles():
         if file.filename == '':
             flash('No file selected for uploading')
             return make_response(jsonify({'result': 'no file selected'}))
-        if file and allowed_file(file.filename):
+        if file:
             filename = secure_filename(file.filename)
             file.save(os.path.join(UPLOAD_FOLDER, filename))
             flash('File successfully uploaded')
@@ -56,7 +45,27 @@ def uploadFiles():
 
 @app.route('/files', methods=['GET'])
 def getFiles():
-    return 0
+    if request.method == 'GET':
+        if len(os.listdir(UPLOAD_FOLDER)) == 0:
+            flash('No files')
+            return make_response(jsonify({'result': 'no file'}))
+        else:
+            print(os.listdir(UPLOAD_FOLDER))
+            return jsonify(os.listdir(UPLOAD_FOLDER))
+
+
+@app.route('/files/<filename>', methods=['DELETE'])
+def deleteFile(filename):
+    if request.method == 'DELETE':
+        if len(os.listdir(UPLOAD_FOLDER)) == 0:
+            flash('No files')
+            return make_response(jsonify({'result': 'No file to delete'}))
+        file = request.files['file']
+        if file and filename == file.filename:
+            os.remove(os.path.join(UPLOAD_FOLDER, filename))
+            return make_response(jsonify({'result': 'File removed.'}))
+        else:
+            return make_response(jsonify({'result': 'Something went wrong!'}))
 
 
 if __name__ == '__main__':

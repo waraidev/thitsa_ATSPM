@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from "@/components/Home.vue"
-import FileUpload from "@/components/FileUpload";
+import Home from "@/views/Home.vue"
+import FileUpload from "@/views/FileUpload.vue"
+import Analysis from "@/views/Analysis";
 
 Vue.use(VueRouter)
 
@@ -13,8 +14,8 @@ const routes = [
     },
     {
       path: '/analysis',
-      name: 'FileUpload',
-      component: FileUpload,
+      name: 'Analysis',
+      component: Analysis,
     },
     {
       path: '/',

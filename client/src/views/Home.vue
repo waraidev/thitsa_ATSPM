@@ -1,23 +1,21 @@
 <template>
   <div id="home">
-    <NavBar />
     <h1>Welcome the GDOT ATSPM Analysis Web Engine!</h1>
     <p>
       Click below or in the navigation bar to upload files and analyze them!
     </p>
     <router-link class="nav-item nav-link px-3" to="/upload">File Uploads</router-link>
     <router-link class="nav-item nav-link px-3" to="/analysis">File Analysis</router-link>
-    <img src="/images/atspm_logo.png" class="rounded mx-auto d-block img-fluid">
+    <a href="https://traffic.dot.ga.gov/atspm">
+      <img src="/images/atspm_logo.png" class="rounded mx-auto d-block img-fluid">
+    </a>
   </div>
 </template>
 
 <script>
-import NavBar from '@/components/NavBar.vue';
-
 export default {
   name: 'Home',
   components: {
-    NavBar,
   },
 };
 </script>
