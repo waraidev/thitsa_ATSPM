@@ -3,7 +3,7 @@
       <h1>Choose a file to analyze below!</h1>
       <div id="button-list">
         <div id="button" v-for="file in fileList" :key="file">
-          <b-button class="px-3" variant="secondary">
+          <b-button class="px-3" variant="info">
             {{ file }}
           </b-button>
         </div>

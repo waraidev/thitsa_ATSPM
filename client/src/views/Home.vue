@@ -9,6 +9,12 @@
     <a href="https://traffic.dot.ga.gov/atspm">
       <img src="/images/atspm_logo.png" class="rounded mx-auto d-block img-fluid">
     </a>
+    <a href="https://www.mercer.edu/">
+      <img src="/images/mercer_logo.png" class="rounded mx-auto d-flex img-fluid">
+    </a>
+    <a href="https://www.gatech.edu/">
+      <img src="/images/yellow_jacket.png" class="rounded mx-auto d-flex img-fluid">
+    </a>
   </div>
 </template>
 
@@ -33,8 +39,8 @@ p {
   text-align: center;
 }
 .img-fluid {
-  width: 80%;
-  height: 80%;
+  width: 20%;
+  height: 20%;
   margin-top: 30px;
 }
 </style>
