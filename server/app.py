@@ -1,8 +1,12 @@
+import os
 import uuid
 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, flash, make_response
 from flask_cors import CORS
+from werkzeug.utils import secure_filename
 
+path = os.path.abspath(os.path.dirname(__file__))
+UPLOAD_FOLDER = os.path.join(path, "upload/")
 
 # configuration
 DEBUG = True
@@ -10,81 +14,58 @@ DEBUG = True
 # instantiate the app
 app = Flask(__name__)
 app.config.from_object(__name__)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['MAX_CONTENT_LENGTH'] = 25 * 1024 * 1024
+app.secret_key = uuid.uuid4().hex
 
 # enable CORS
 CORS(app, resources={r'/*': {'origins': '*'}})
 
 
-# sanity check route
-@app.route('/ping', methods=['GET'])
-def ping_pong():
-    return jsonify('pong!')
-
-
-BOOKS = [
-    {
-        'id': uuid.uuid4().hex,
-        'title': 'On the Road',
-        'author': 'Jack Kerouac',
-        'read': True
-    },
-    {
-        'id': uuid.uuid4().hex,
-        'title': 'Harry Potter and the Philosopher\'s Stone',
-        'author': 'J. K. Rowling',
-        'read': False
-    },
-    {
-        'id': uuid.uuid4().hex,
-        'title': 'Green Eggs and Ham',
-        'author': 'Dr. Seuss',
-        'read': True
-    }
-]
-
-
-@app.route('/books', methods=['GET', 'POST'])
-def all_books():
-    response_object = {'status': 'success'}
+@app.route('/files', methods=['POST'])
+def uploadFiles():
     if request.method == 'POST':
-        post_data = request.get_json()
-        BOOKS.append({
-            'id': uuid.uuid4().hex,
-            'title': post_data.get('title'),
-            'author': post_data.get('author'),
-            'read': post_data.get('read')
-        })
-        response_object['message'] = 'Book added!'
-    else:
-        response_object['books'] = BOOKS
-    return jsonify(response_object)
+        # check if the post request has the file part
+        if 'file' not in request.files:
+            flash('No file part')
+            return make_response(jsonify({'result': 'error'}))
+        file = request.files['file']
+        if file.filename == '':
+            flash('No file selected for uploading')
+            return make_response(jsonify({'result': 'no file selected'}))
+        if file:
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(UPLOAD_FOLDER, filename))
+            flash('File successfully uploaded')
+            return make_response(jsonify({'result': 'success'}))
+        else:
+            flash('CSV format is the only allowed file type.')
+            return make_response(jsonify({'result': 'wrong file type'}))
 
 
-@app.route('/books/<book_id>', methods=['PUT', 'DELETE'])
-def single_book(book_id):
-    response_object = {'status': 'success'}
-    if request.method == 'PUT':
-        post_data = request.get_json()
-        remove_book(book_id)
-        BOOKS.append({
-            'id': uuid.uuid4().hex,
-            'title': post_data.get('title'),
-            'author': post_data.get('author'),
-            'read': post_data.get('read')
-        })
-        response_object['message'] = 'Book updated!'
+@app.route('/files', methods=['GET'])
+def getFiles():
+    if request.method == 'GET':
+        if len(os.listdir(UPLOAD_FOLDER)) == 0:
+            flash('No files')
+            return make_response(jsonify({'result': 'no file'}))
+        else:
+            print(os.listdir(UPLOAD_FOLDER))
+            return jsonify(os.listdir(UPLOAD_FOLDER))
+
+
+@app.route('/files/<filename>', methods=['DELETE'])
+def deleteFile(filename):
     if request.method == 'DELETE':
-        remove_book(book_id)
-        response_object['message'] = 'Book removed!'
-    return jsonify(response_object)
-
-
-def remove_book(book_id):
-    for book in BOOKS:
-        if book['id'] == book_id:
-            BOOKS.remove(book)
-            return True
-    return False
+        if len(os.listdir(UPLOAD_FOLDER)) == 0:
+            flash('No files')
+            return make_response(jsonify({'result': 'No file to delete'}))
+        file = request.files['file']
+        if file and filename == file.filename:
+            os.remove(os.path.join(UPLOAD_FOLDER, filename))
+            return make_response(jsonify({'result': 'File removed.'}))
+        else:
+            return make_response(jsonify({'result': 'Something went wrong!'}))
 
 
 if __name__ == '__main__':

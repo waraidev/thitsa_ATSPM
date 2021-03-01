@@ -1,23 +1,33 @@
-import Vue from 'vue';
-import Router from 'vue-router';
-import Ping from '@/components/Ping.vue';
-import Books from '@/components/Books.vue';
+import Vue from 'vue'
+import VueRouter from 'vue-router'
+import Home from "@/views/Home.vue"
+import FileUpload from "@/views/FileUpload.vue"
+import Analysis from "@/views/Analysis";
 
-Vue.use(Router);
+Vue.use(VueRouter)
 
-export default new Router({
-  mode: 'history',
-  base: process.env.BASE_URL,
-  routes: [
+const routes = [
+    {
+      path: '/upload',
+      name: 'FileUpload',
+      component: FileUpload,
+    },
+    {
+      path: '/analysis',
+      name: 'Analysis',
+      component: Analysis,
+    },
     {
       path: '/',
-      name: 'Books',
-      component: Books,
+      name: 'Home',
+      component: Home,
     },
-    {
-      path: '/ping',
-      name: 'Ping',
-      component: Ping,
-    },
-  ],
-});
+  ]
+
+const router = new VueRouter({
+    mode: 'history',
+    base: process.env.BASE_URL,
+    routes: routes,
+})
+
+export default router
