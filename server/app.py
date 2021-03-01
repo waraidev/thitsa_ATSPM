@@ -1,7 +1,7 @@
 import os
 import uuid
 
-from flask import Flask, json, jsonify, request, flash, make_response
+from flask import Flask, jsonify, request, flash, make_response
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 
@@ -19,7 +19,7 @@ app.config['MAX_CONTENT_LENGTH'] = 25 * 1024 * 1024
 app.secret_key = uuid.uuid4().hex
 
 # enable CORS
-CORS(app)
+CORS(app, resources={r'/*': {'origins': '*'}})
 
 
 @app.route('/files', methods=['POST'])

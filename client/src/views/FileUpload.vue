@@ -38,21 +38,21 @@ export default {
       console.log(`Uploaded ${file.name}`);
     },
     onFileRemove(file) {
-      axios({
-        url: `${API_URL}files/${file['name']}`,
-        method: 'DELETE',
-        data: {
-          delete_file: file['name'],
-        },
-      })
-      .then(res => {console.log(res)})
-      .catch((error) => {
-        console.error(error);
-      });
-      // axios.delete(`${API_URL}files`)
-      //   .catch((error) => {
-      //     console.error(error);
-      //   });
+      // axios({
+      //   url: `${API_URL}files/${file['name']}`,
+      //   method: 'DELETE',
+      //   data: {
+      //     delete_file: file['name'],
+      //   },
+      // })
+      // .then(res => {console.log(res)})
+      // .catch((error) => {
+      //   console.error(error);
+      // });
+      axios.delete(`${API_URL}files/${file['name']}`)
+        .catch((error) => {
+          console.error(error);
+        });
     },
   },
   data() {
