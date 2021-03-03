@@ -5,6 +5,9 @@ from flask import Flask, jsonify, request, flash, make_response
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 
+from helpers import upload_file_s3
+from config import s3_bucket
+
 path = os.path.abspath(os.path.dirname(__file__))
 UPLOAD_FOLDER = os.path.join(path, "upload/")
 
@@ -23,24 +26,40 @@ CORS(app, resources={r'/*': {'origins': '*'}})
 
 
 @app.route('/files', methods=['POST'])
-def uploadFiles():
-    if request.method == 'POST':
-        # check if the post request has the file part
-        if 'file' not in request.files:
-            flash('No file part')
-            return make_response(jsonify({'result': 'error'}))
-        file = request.files['file']
-        if file.filename == '':
-            flash('No file selected for uploading')
-            return make_response(jsonify({'result': 'no file selected'}))
-        if file:
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(UPLOAD_FOLDER, filename))
-            flash('File successfully uploaded')
-            return make_response(jsonify({'result': 'success'}))
-        else:
-            flash('CSV format is the only allowed file type.')
-            return make_response(jsonify({'result': 'wrong file type'}))
+def upload_file():
+    if 'file' not in request.files:
+        flash('No file part')
+        return make_response(jsonify({'result': 'error'}))
+    file = request.files['file']
+    if file.filename == '':
+        flash('No file selected for uploading')
+        return make_response(jsonify({'result': 'no file selected'}))
+    if file:
+        file.filename = secure_filename(file.filename)
+        output = upload_file_s3(file, s3_bucket())
+        flash('File successfully uploaded')
+        return make_response(jsonify({'result': 'success, %s' % output}))
+
+
+# @app.route('/files', methods=['POST'])
+# def uploadFiles():
+#     if request.method == 'POST':
+#         # check if the post request has the file part
+#         if 'file' not in request.files:
+#             flash('No file part')
+#             return make_response(jsonify({'result': 'error'}))
+#         file = request.files['file']
+#         if file.filename == '':
+#             flash('No file selected for uploading')
+#             return make_response(jsonify({'result': 'no file selected'}))
+#         if file:
+#             filename = secure_filename(file.filename)
+#             file.save(os.path.join(UPLOAD_FOLDER, filename))
+#             flash('File successfully uploaded')
+#             return make_response(jsonify({'result': 'success'}))
+#         else:
+#             flash('CSV format is the only allowed file type.')
+#             return make_response(jsonify({'result': 'wrong file type'}))
 
 
 @app.route('/files', methods=['GET'])
