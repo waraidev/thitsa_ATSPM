@@ -60,3 +60,13 @@ def upload_file_s3(file, bucket_name, acl="public-read"):
         return e
 
     return "{}{}".format(config.s3_location(), file.filename)
+
+
+def delete_file_s3(file, bucket_name):
+    s3.delete_object(Bucket=bucket_name, Key=file.filename)
+    return "\'{}\' has been deleted!".format(file.filename)
+
+
+def get_files_s3(bucket_name):
+    bucket = s3.list_objects_v2(Bucket=bucket_name)
+    return [file['Key'] for file in bucket['Contents']]

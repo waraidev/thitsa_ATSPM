@@ -24,7 +24,6 @@
 // import axios from 'axios';
 import vue2Dropzone from 'vue2-dropzone';
 import 'vue2-dropzone/dist/vue2Dropzone.min.css';
-import axios from 'axios';
 
 const API_URL = 'http://localhost:5000/';
 
@@ -37,22 +36,18 @@ export default {
     onUploadComplete(file) {
       console.log(`Uploaded ${file.name}`);
     },
-    onFileRemove(file) {
-      // axios({
-      //   url: `${API_URL}files/${file['name']}`,
-      //   method: 'DELETE',
-      //   data: {
-      //     delete_file: file['name'],
-      //   },
-      // })
-      // .then(res => {console.log(res)})
-      // .catch((error) => {
-      //   console.error(error);
-      // });
-      axios.delete(`${API_URL}files/${file['name']}`)
-        .catch((error) => {
-          console.error(error);
-        });
+    async onFileRemove(file) {
+      // axios.delete(`${API_URL}files/${file['name']}`)
+      //   .catch((error) => {
+      //     console.error(error);
+      //   });
+      const data = await this.$http.delete(
+          `${API_URL}files/${file['name']}`,
+      ).then(() => {
+        console.log(data);
+      }).catch((error) => {
+        console.error(error);
+      });
     },
   },
   data() {
