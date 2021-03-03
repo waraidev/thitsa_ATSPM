@@ -59,4 +59,4 @@ def upload_file_s3(file, bucket_name, acl="public-read"):
         print("File didn't upload: ", e)
         return e
 
-    return "%s%s" % config.s3_location(), file.filename
+    return "{}{}".format(config.s3_location(), file.filename)
