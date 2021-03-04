@@ -37,10 +37,6 @@ export default {
       console.log(`Uploaded ${file.name}`);
     },
     async onFileRemove(file) {
-      // axios.delete(`${API_URL}files/${file['name']}`)
-      //   .catch((error) => {
-      //     console.error(error);
-      //   });
       await this.$http.delete(
           `${API_URL}files/${file['name']}`,
       ).then(() => {
