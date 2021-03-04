@@ -2,24 +2,24 @@ import base64
 from io import BytesIO
 
 import numpy as np
-import matplotlib.pyplot as plt
-import time
+import matplotlib.figure as plt
+import matplotlib.style as plt_style
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 
 # Function Imports
-from server.simpls.ReshapeData import reshape
-from server.simpls.MatrixFunctions import RPCA, build_SIMPLS, predict_SIMPLS
+from simpls.ReshapeData import reshape
+from simpls.MatrixFunctions import RPCA, build_SIMPLS, predict_SIMPLS
 
 
-def SIMPLS_Chart():
-    path_to_data = ""
+def SIMPLS_Chart(csv_url, filename):
 
-    data = reshape(path_to_data)
+    data = reshape(csv_url)
+    signal_index = filename.find("signalID_")
+    signal = filename[signal_index + 9:signal_index + 9 + 4]
 
     # Visual update for users
     # implement on web
     print("Loading...")
-
-    start = time.time()
 
     # Load and de-noise data
     A = np.array(data)
@@ -56,24 +56,27 @@ def SIMPLS_Chart():
 
     Time = np.concatenate((TimeZ, TimeY))
 
-    fig = plt.figure(figsize=(6, 4), dpi=150)
-    plt.style.use('seaborn')
+    fig = plt.Figure(figsize=(6, 4), dpi=150)
+    plt_style.use('seaborn')
     axs = fig.subplots(1, 1)
-    fig.suptitle("Intersection 1663")
+    fig.suptitle("Intersection {}".format(signal))
     axs.set_xlabel("Time (hr)")
     axs.set_ylabel("Cars / 15 mins")
     axs.plot(TimeZ, L[-1, :split], 'g', label='Denoised predictors')
     axs.plot(TimeY, L[-1, split:], 'r', label='Denoised response')
     axs.plot(TimeY, Prediction[-1, :], 'g--', label='Predicted response')
     axs.plot(Time, A[-1, :], 'b:', label='Measured')
-    plt.legend(framealpha=1, frameon=True)
+    fig.legend(framealpha=1, frameon=True)
 
-    buf = BytesIO()
-    fig.savefig(buf, format="png")
-    graph = base64.b64encode(buf.getbuffer()).decode("ascii")
-    return f"<img src='data:image/png;base64,{graph}'/>"
+    image = BytesIO()
+    FigureCanvas(fig).print_png(image)
+    image_b64_str = "data:image/png;base64,"
+    image_b64_str += base64.b64encode(image.getvalue()).decode('utf8')
 
-# print('It took', time.time() - start, 'seconds to load data, build model, predict, and plot the results.')
+    print("SIMPLS finished!")
+
+    return image_b64_str
+
 
 # Displaying Downloadable CSV files
 
