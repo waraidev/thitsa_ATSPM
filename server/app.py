@@ -5,6 +5,9 @@ from flask import Flask, jsonify, request, flash, make_response
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 
+from helpers import upload_file_s3, get_all_files_s3, delete_file_s3
+from config import s3_bucket
+
 path = os.path.abspath(os.path.dirname(__file__))
 UPLOAD_FOLDER = os.path.join(path, "upload/")
 
@@ -23,49 +26,44 @@ CORS(app, resources={r'/*': {'origins': '*'}})
 
 
 @app.route('/files', methods=['POST'])
-def uploadFiles():
-    if request.method == 'POST':
-        # check if the post request has the file part
-        if 'file' not in request.files:
-            flash('No file part')
-            return make_response(jsonify({'result': 'error'}))
-        file = request.files['file']
-        if file.filename == '':
-            flash('No file selected for uploading')
-            return make_response(jsonify({'result': 'no file selected'}))
-        if file:
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(UPLOAD_FOLDER, filename))
-            flash('File successfully uploaded')
-            return make_response(jsonify({'result': 'success'}))
-        else:
-            flash('CSV format is the only allowed file type.')
-            return make_response(jsonify({'result': 'wrong file type'}))
+def upload_file():
+    if 'file' not in request.files:
+        flash('No file part')
+        return make_response(jsonify({'result': 'error'}))
+    file = request.files['file']
+    if file.filename == '':
+        flash('No file selected for uploading')
+        return make_response(jsonify({'result': 'no file selected'}))
+    if file:
+        file.filename = secure_filename(file.filename)
+        output = upload_file_s3(file, s3_bucket())
+        flash('File successfully uploaded')
+        return make_response(jsonify({'result': 'success, {}'.format(output)}))
 
 
 @app.route('/files', methods=['GET'])
 def getFiles():
     if request.method == 'GET':
-        if len(os.listdir(UPLOAD_FOLDER)) == 0:
+        filenames = get_all_files_s3(s3_bucket())
+        if len(filenames) == 0:
             flash('No files')
-            return make_response(jsonify({'result': 'no file'}))
+            return make_response(jsonify({'result': 'no files'}))
         else:
-            print(os.listdir(UPLOAD_FOLDER))
-            return jsonify(os.listdir(UPLOAD_FOLDER))
+            print(filenames)
+            return jsonify(filenames)
 
 
 @app.route('/files/<filename>', methods=['DELETE'])
 def deleteFile(filename):
     if request.method == 'DELETE':
-        if len(os.listdir(UPLOAD_FOLDER)) == 0:
-            flash('No files')
-            return make_response(jsonify({'result': 'No file to delete'}))
-        file = request.files['file']
-        if file and filename == file.filename:
-            os.remove(os.path.join(UPLOAD_FOLDER, filename))
-            return make_response(jsonify({'result': 'File removed.'}))
-        else:
-            return make_response(jsonify({'result': 'Something went wrong!'}))
+        if filename not in get_all_files_s3(s3_bucket()):
+            flash('File does not exist')
+            return make_response(jsonify({'result': 'File does not exist.'}))
+        output = delete_file_s3(filename, s3_bucket())
+
+        return make_response(jsonify(
+            {'result': 'success, {} deleted!'.format(output)}
+        ))
 
 
 if __name__ == '__main__':
