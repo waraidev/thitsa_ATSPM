@@ -8,9 +8,15 @@
         </b-button>
       </div>
       <div id="chart">
-        <h3 class="chart-item">{{completion_time}}</h3>
         <b-spinner class="chart-item" variant="info" v-if="loading" />
-        <b-img fluid :src="image" />
+        <b-card
+          title="SIMPLS"
+          img-bottom
+          :img-src="image"
+          v-if="!(image === '')"
+        >
+          <b-card-text>{{ completionTime }}</b-card-text>
+        </b-card>
         <h3>{{error}}</h3>
       </div>
     </div>
@@ -29,7 +35,7 @@ export default {
       image: '',
       loading: false,
       error: '',
-      completion_time: ''
+      completionTime: ''
     };
   },
   methods: {
@@ -52,7 +58,7 @@ export default {
 
           let end = performance.now();
           let calc_time = ((end - start) * 0.001).toPrecision(5);
-          this.completion_time = `It took ${calc_time} seconds to complete SIMPLS!`;
+          this.completionTime = `It took ${calc_time} seconds to complete SIMPLS!`;
 
           console.log("SIMPLS Finished!")
         }).catch((error) => {
@@ -69,6 +75,9 @@ export default {
 </script>
 
 <style scoped>
+#analysis {
+  width: 100%
+}
 h1 {
   margin: 15px 0px 10px 0px;
   text-align: center;
@@ -84,7 +93,7 @@ h1 {
   padding: 10px;
 }
 #chart {
-  margin-top: 30px;
+  margin: 5vh 15% 15vh 15%;
   text-align: center;
 }
 </style>
