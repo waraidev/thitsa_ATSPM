@@ -41,10 +41,10 @@ export default {
       //   .catch((error) => {
       //     console.error(error);
       //   });
-      const data = await this.$http.delete(
+      await this.$http.delete(
           `${API_URL}files/${file['name']}`,
       ).then(() => {
-        console.log(data);
+        console.log(`${file['name']} has been deleted!`);
       }).catch((error) => {
         console.error(error);
       });

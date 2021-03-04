@@ -5,7 +5,7 @@ from flask import Flask, jsonify, request, flash, make_response
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 
-from helpers import upload_file_s3, get_files_s3, delete_file_s3
+from helpers import upload_file_s3, get_all_files_s3, delete_file_s3
 from config import s3_bucket
 
 path = os.path.abspath(os.path.dirname(__file__))
@@ -44,7 +44,7 @@ def upload_file():
 @app.route('/files', methods=['GET'])
 def getFiles():
     if request.method == 'GET':
-        filenames = get_files_s3(s3_bucket())
+        filenames = get_all_files_s3(s3_bucket())
         if len(filenames) == 0:
             flash('No files')
             return make_response(jsonify({'result': 'no files'}))
@@ -56,15 +56,14 @@ def getFiles():
 @app.route('/files/<filename>', methods=['DELETE'])
 def deleteFile(filename):
     if request.method == 'DELETE':
-        if len(os.listdir(UPLOAD_FOLDER)) == 0:
-            flash('No files')
-            return make_response(jsonify({'result': 'No file to delete'}))
-        file = request.files['file']
-        if file and filename == file.filename:
-            os.remove(os.path.join(UPLOAD_FOLDER, filename))
-            return make_response(jsonify({'result': 'File removed.'}))
-        else:
-            return make_response(jsonify({'result': 'Something went wrong!'}))
+        if filename not in get_all_files_s3(s3_bucket()):
+            flash('File does not exist')
+            return make_response(jsonify({'result': 'File does not exist.'}))
+        output = delete_file_s3(filename, s3_bucket())
+
+        return make_response(jsonify(
+            {'result': 'success, {} deleted!'.format(output)}
+        ))
 
 
 if __name__ == '__main__':
