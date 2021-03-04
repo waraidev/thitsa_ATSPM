@@ -1,25 +1,20 @@
-import os
-import uuid
-
 from flask import Flask, jsonify, request, flash, make_response
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 
-from helpers import upload_file_s3, get_all_files_s3, delete_file_s3
+from aws_helpers import upload_file_s3, get_all_files_s3, delete_file_s3, get_filename
 from config import s3_bucket
+import config
+from simpls.SIMPLS import SIMPLS_Chart
 
-path = os.path.abspath(os.path.dirname(__file__))
-UPLOAD_FOLDER = os.path.join(path, "upload/")
-
+# See aws_helpers.py for details on config file not in Git
 # configuration
-DEBUG = True
+DEBUG = config.debug()
 
 # instantiate the app
 app = Flask(__name__)
 app.config.from_object(__name__)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['MAX_CONTENT_LENGTH'] = 25 * 1024 * 1024
-app.secret_key = uuid.uuid4().hex
+app.secret_key = config.app_secret_key()
 
 # enable CORS
 CORS(app, resources={r'/*': {'origins': '*'}})
@@ -42,7 +37,7 @@ def upload_file():
 
 
 @app.route('/files', methods=['GET'])
-def getFiles():
+def get_files():
     if request.method == 'GET':
         filenames = get_all_files_s3(s3_bucket())
         if len(filenames) == 0:
@@ -64,6 +59,17 @@ def deleteFile(filename):
         return make_response(jsonify(
             {'result': 'success, {} deleted!'.format(output)}
         ))
+
+
+@app.route('/plot/<filename>', methods=['GET'])
+def get_plot(filename):
+    if request.method == 'GET':
+        if filename not in get_all_files_s3(s3_bucket()):
+            flash('File does not exist')
+            return make_response(jsonify({'result': 'File does not exist.'}))
+        file_url = get_filename(filename)
+        return SIMPLS_Chart(file_url, filename)
+
 
 
 if __name__ == '__main__':

@@ -78,3 +78,7 @@ def get_all_files_s3(bucket_name):
         return e
 
     return [file['Key'] for file in bucket['Contents']]
+
+
+def get_filename(filename):
+    return "{}{}".format(config.s3_location(), filename)

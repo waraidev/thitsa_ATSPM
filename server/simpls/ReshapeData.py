@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from io import BytesIO
 
 
 def find_indexes(series, dates):
@@ -14,8 +15,9 @@ def find_indexes(series, dates):
     return idx
 
 
-def reshape(file_path):
-    df = pd.read_csv(file_path, skiprows=2)
+# 'file_body' is the CSV file from Amazon S3
+def reshape(file_url):
+    df = pd.read_csv(file_url, skiprows=2)
 
     for c in df.columns:
         if c.find("Total") != -1:
