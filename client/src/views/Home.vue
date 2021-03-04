@@ -6,15 +6,18 @@
     </p>
     <router-link class="nav-item nav-link px-3" to="/upload">File Uploads</router-link>
     <router-link class="nav-item nav-link px-3" to="/analysis">File Analysis</router-link>
-    <a href="https://traffic.dot.ga.gov/atspm">
-      <img src="/images/atspm_logo.png" class="rounded mx-auto d-block img-fluid">
-    </a>
-    <a href="https://www.mercer.edu/">
-      <img src="/images/mercer_logo.png" class="rounded mx-auto d-flex img-fluid">
-    </a>
-    <a href="https://www.gatech.edu/">
-      <img src="/images/yellow_jacket.png" class="rounded mx-auto d-flex img-fluid">
-    </a>
+    <div style="text-align: center;">
+      <a href="https://www.mercer.edu/">
+        <b-img fluid class="logo" src="/images/mercer_logo.png" />
+      </a>
+      <a href="https://traffic.dot.ga.gov/atspm">
+        <b-img fluid class="logo" src="/images/atspm_logo.png" />
+      </a>
+      <a href="https://www.gatech.edu/">
+        <b-img fluid class="logo" src="/images/yellow_jacket.png" />
+      </a>
+    </div>
+
   </div>
 </template>
 
@@ -38,9 +41,9 @@ p {
 .nav-link {
   text-align: center;
 }
-.img-fluid {
+.logo {
   width: 20%;
-  height: 20%;
-  margin-top: 30px;
+  height: auto;
+  margin: 30px 20px 0px 20px;
 }
 </style>
