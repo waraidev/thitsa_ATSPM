@@ -1,5 +1,5 @@
 <template>
-    <div id="analysis">
+    <div id="web-page">
       <h1>Choose a file to analyze below!</h1>
       <div id="button-list">
         <b-button v-for="file in fileList" :key="file"
@@ -7,7 +7,7 @@
           {{ file }}
         </b-button>
       </div>
-      <div id="chart">
+      <div id="chart" v-if="buttonClicked">
         <b-spinner class="chart-item" variant="info" v-if="loading" />
         <b-card
           title="SIMPLS"
@@ -15,7 +15,7 @@
           :img-src="image"
           v-if="!(image === '')"
         >
-          <b-card-text>{{ completionTime }}</b-card-text>
+          <b-card-text>{{ completionTime }}<hr></b-card-text>
         </b-card>
         <h3>{{error}}</h3>
       </div>
@@ -34,6 +34,7 @@ export default {
       fileList: [],
       image: '',
       loading: false,
+      buttonClicked: false,
       error: '',
       completionTime: ''
     };
@@ -49,6 +50,7 @@ export default {
         });
     },
     showChart(filename) {
+      this.buttonClicked = true;
       this.loading = true;
       let start = performance.now();
       axios.get(`${path}plot/${filename}`)
@@ -75,9 +77,6 @@ export default {
 </script>
 
 <style scoped>
-#analysis {
-  width: 100%
-}
 h1 {
   margin: 15px 0px 10px 0px;
   text-align: center;
@@ -93,7 +92,11 @@ h1 {
   padding: 10px;
 }
 #chart {
-  margin: 5vh 15% 15vh 15%;
+  margin: 10px 15% 10vh 15%;
+  padding: 3vh 1vw 3vh 1vw;
   text-align: center;
+  background-color: dimgray;
+  border-radius: 10px;
+  color: black;
 }
 </style>

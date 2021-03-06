@@ -1,5 +1,5 @@
 <template>
-  <div class="file-upload">
+  <div id="web-page">
     <dropzone
       ref="myDropzone"
       id="myDropzone"
@@ -66,11 +66,12 @@ export default {
 <style scoped>
 .file-upload {
   margin: 0px 10px 0px 10px;
+  color: azure;
 }
 
 #myDropzone >>> .dz-message {
   font-weight: 700;
-  color: #acacac;
+  color: #ec7424;
 }
 #myDropzone >>> .fa-cloud-upload {
   margin-right: 10px;
@@ -79,6 +80,10 @@ export default {
   position: relative;
   margin: 20px 10px 10px 10px;
   height: 300px;
+  background-color: dimgray;
+}
+.myDropzone:hover {
+  background-color: slategray;
 }
 .dropzone-custom-content {
   position: absolute;
@@ -92,7 +97,7 @@ export default {
   color: #ec7424; /*Secondary in bootstrap*/
 }
 .subtitle {
-  color: #314b5f;
+  color: azure;
 }
 .instructions {
   margin-top: 20px;
