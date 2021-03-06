@@ -49,7 +49,7 @@ def get_files():
 
 
 @app.route('/files/<filename>', methods=['DELETE'])
-def deleteFile(filename):
+def delete_file(filename):
     if request.method == 'DELETE':
         if filename not in get_all_files_s3(s3_bucket()):
             flash('File does not exist')
@@ -69,7 +69,6 @@ def get_plot(filename):
             return make_response(jsonify({'result': 'File does not exist.'}))
         file_url = get_filename(filename)
         return SIMPLS_Chart(file_url, filename)
-
 
 
 if __name__ == '__main__':

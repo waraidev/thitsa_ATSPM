@@ -1,11 +1,13 @@
 <template>
   <div id="home">
-    <h1>Welcome the GDOT ATSPM Analysis Web Engine!</h1>
-    <p>
-      Click below or in the navigation bar to upload files and analyze them!
-    </p>
-    <router-link class="nav-item nav-link px-3" to="/upload">File Uploads</router-link>
-    <router-link class="nav-item nav-link px-3" to="/analysis">File Analysis</router-link>
+    <div id="welcome">
+      <h1 class="rounded" style="background-color: dimgray">Welcome the GDOT ATSPM Analysis Web Engine!</h1>
+    </div>
+    <div id="click-files">
+      <h4 class="rounded">Click below or in the navigation bar to upload files and analyze them!</h4>
+    </div>
+    <b-button pill variant="primary" class="nav-link" to="/upload">File Uploads</b-button>
+    <b-button pill variant="info" class="nav-link" to="/analysis">File Analysis</b-button>
     <div style="text-align: center;">
       <a href="https://www.mercer.edu/">
         <b-img fluid class="logo" src="/images/mercer_logo.png" />
@@ -17,7 +19,6 @@
         <b-img fluid class="logo" src="/images/yellow_jacket.png" />
       </a>
     </div>
-
   </div>
 </template>
 
@@ -30,16 +31,30 @@ export default {
 </script>
 
 <style scoped>
-h1 {
-  margin: 15px 0px 10px 0px;
+#home {
+  color: azure;
   text-align: center;
+  background-color: black;
+  background-position: bottom;
+  border-radius: 25px 25px 25px 25px;
+  margin: 2vh 2vw 2vh 2vw;
+  padding: 5vh 0 10vh 0;
+  background-image: url("../../public/images/pixel_city.png");
 }
-p {
-  text-align: center;
-  padding-top: 20px;
+#welcome {
+  margin: 0 20vw 0 20vw;
+}
+#welcome h1 {
+  background-color: dimgray;
+}
+#click-files {
+  margin: 2vh 25vw 2vh 25vw;
+}
+#click-files h4 {
+  background-color: dimgray;
 }
 .nav-link {
-  text-align: center;
+  margin: 1vh 35vw 1vh 35vw;
 }
 .logo {
   width: 20%;

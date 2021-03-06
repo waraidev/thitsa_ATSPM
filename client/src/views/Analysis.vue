@@ -1,5 +1,5 @@
 <template>
-    <div id="analysis">
+    <div id="web-page">
       <h1>Choose a file to analyze below!</h1>
       <div id="button-list">
         <b-button v-for="file in fileList" :key="file"
@@ -7,10 +7,16 @@
           {{ file }}
         </b-button>
       </div>
-      <div id="chart">
-        <h3 class="chart-item">{{completion_time}}</h3>
+      <div id="chart" v-if="buttonClicked">
         <b-spinner class="chart-item" variant="info" v-if="loading" />
-        <b-img fluid :src="image" />
+        <b-card
+          title="SIMPLS"
+          img-bottom
+          :img-src="image"
+          v-if="!(image === '')"
+        >
+          <b-card-text>{{ completionTime }}<hr></b-card-text>
+        </b-card>
         <h3>{{error}}</h3>
       </div>
     </div>
@@ -28,8 +34,9 @@ export default {
       fileList: [],
       image: '',
       loading: false,
+      buttonClicked: false,
       error: '',
-      completion_time: ''
+      completionTime: ''
     };
   },
   methods: {
@@ -43,6 +50,7 @@ export default {
         });
     },
     showChart(filename) {
+      this.buttonClicked = true;
       this.loading = true;
       let start = performance.now();
       axios.get(`${path}plot/${filename}`)
@@ -52,7 +60,7 @@ export default {
 
           let end = performance.now();
           let calc_time = ((end - start) * 0.001).toPrecision(5);
-          this.completion_time = `It took ${calc_time} seconds to complete SIMPLS!`;
+          this.completionTime = `It took ${calc_time} seconds to complete SIMPLS!`;
 
           console.log("SIMPLS Finished!")
         }).catch((error) => {
@@ -84,7 +92,11 @@ h1 {
   padding: 10px;
 }
 #chart {
-  margin-top: 30px;
+  margin: 10px 15% 10vh 15%;
+  padding: 3vh 1vw 3vh 1vw;
   text-align: center;
+  background-color: dimgray;
+  border-radius: 10px;
+  color: black;
 }
 </style>
