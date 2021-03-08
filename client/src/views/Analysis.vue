@@ -92,7 +92,7 @@ h1 {
   padding: 10px;
 }
 #chart {
-  margin: 10px 15% 10vh 15%;
+  margin: 10px 10vw 10vh 10vw;
   padding: 3vh 1vw 3vh 1vw;
   text-align: center;
   background-color: dimgray;

@@ -42,13 +42,13 @@ export default {
   background-image: url("../../public/images/pixel_city.png");
 }
 #welcome {
-  margin: 0 20vw 0 20vw;
+  margin: 0 24vw 0 24vw;
 }
 #welcome h1 {
   background-color: dimgray;
 }
 #click-files {
-  margin: 2vh 25vw 2vh 25vw;
+  margin: 2vh 28.5vw 2vh 28.5vw;
 }
 #click-files h4 {
   background-color: dimgray;
