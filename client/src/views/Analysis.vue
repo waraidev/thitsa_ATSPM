@@ -25,7 +25,7 @@
 <script>
 import axios from 'axios';
 
-const path = 'http://localhost:5000/'
+const path = 'http://localhost:5000/';
 
 export default {
   name: 'Analysis',
@@ -50,6 +50,7 @@ export default {
         });
     },
     showChart(filename) {
+      this.error = '';
       this.buttonClicked = true;
       this.loading = true;
       let start = performance.now();
@@ -62,9 +63,10 @@ export default {
           let calc_time = ((end - start) * 0.001).toPrecision(5);
           this.completionTime = `It took ${calc_time} seconds to complete SIMPLS!`;
 
-          console.log("SIMPLS Finished!")
+          console.log("SIMPLS Finished!");
         }).catch((error) => {
           this.error = error;
+          this.loading = false;
           console.error(error);
       });
     },
@@ -92,7 +94,7 @@ h1 {
   padding: 10px;
 }
 #chart {
-  margin: 10px 15% 10vh 15%;
+  margin: 10px 10vw 10vh 10vw;
   padding: 3vh 1vw 3vh 1vw;
   text-align: center;
   background-color: dimgray;

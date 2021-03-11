@@ -7,6 +7,7 @@
         <b-navbar-nav>
           <b-nav-item href="/upload">File Upload</b-nav-item>
           <b-nav-item href="/analysis">Analysis</b-nav-item>
+          <b-nav-item href="/past-analysis">Past Analysis</b-nav-item>
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>

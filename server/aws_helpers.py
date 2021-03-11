@@ -4,8 +4,11 @@
 # import uuid as key
 #
 #
-# def s3_bucket():
-#     return (S3 Bucket)
+# def s3_file_bucket():
+#     return (S3 File Bucket)
+#
+# def s3_image_bucket():
+#     return (S3 Image Bucket)
 #
 #
 # def s3_access_key_id():
@@ -16,8 +19,12 @@
 #     return (S3 Secret Key)
 #
 #
-# def s3_location():
-#     return "https://%s.s3.amazonaws.com/" % s3_bucket()
+# def s3_file_location():
+#     return "https://{}.s3.amazonaws.com/".format(s3_file_bucket())
+#
+#
+# def s3_image_location():
+#     return "https://{}.s3.amazonaws.com/".format(s3_image_bucket())
 #
 #
 # def app_secret_key():
@@ -43,23 +50,33 @@ s3 = boto3.client(
 )
 
 
-def upload_file_s3(file, bucket_name, acl="public-read"):
+def get_signal_name(filename):
+    signal_index = filename.find("signalID_")
+    signal = filename[signal_index + 9:signal_index + 9 + 4]
+    return "signal" + signal + ".png"
+
+
+def upload_file_s3(file, bucket_name, filename=None, content_type="image/png", acl="public-read"):
     # Docs: http://boto3.readthedocs.io/en/latest/guide/s3.html
+    if filename is None:
+        filename = file.filename
+        content_type = file.content_type
+
     try:
         s3.upload_fileobj(
             file,
             bucket_name,
-            file.filename,
+            filename,
             ExtraArgs={
                 "ACL": acl,
-                "ContentType": file.content_type
+                "ContentType": content_type
             }
         )
     except Exception as e:
         print("File didn't upload: ", e)
         return e
 
-    return "{}{}".format(config.s3_location(), file.filename)
+    return get_file_url(filename)
 
 
 def delete_file_s3(filename, bucket_name):
@@ -80,5 +97,9 @@ def get_all_files_s3(bucket_name):
     return [file['Key'] for file in bucket['Contents']]
 
 
-def get_filename(filename):
-    return "{}{}".format(config.s3_location(), filename)
+def get_file_url(filename):
+    return "{}{}".format(config.s3_file_location(), filename)
+
+
+def get_image_url(image_name):
+    return "{}{}".format(config.s3_image_location(), image_name)
