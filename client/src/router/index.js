@@ -1,8 +1,10 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+
 import Home from "@/views/Home.vue"
 import FileUpload from "@/views/FileUpload.vue"
 import Analysis from "@/views/Analysis";
+import PastAnalysis from "@/views/PastAnalysis";
 
 Vue.use(VueRouter)
 
@@ -16,6 +18,11 @@ const routes = [
       path: '/analysis',
       name: 'Analysis',
       component: Analysis,
+    },
+    {
+      path: '/past-analysis',
+      name: 'PastAnalysis',
+      component: PastAnalysis,
     },
     {
       path: '/',

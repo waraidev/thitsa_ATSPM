@@ -4,19 +4,18 @@ from werkzeug.utils import secure_filename
 from io import BytesIO
 import base64
 
-from aws_helpers import upload_file_s3, get_all_files_s3, delete_file_s3, get_filename, get_signal_name
+from aws_helpers import upload_file_s3, get_all_files_s3, delete_file_s3
+from aws_helpers import get_file_url, get_signal_name, get_image_url
 from config import s3_file_bucket, s3_image_bucket
 import config
 from simpls.SIMPLS import SIMPLS_Chart
 
 # See aws_helpers.py for details on config file not in Git
-# configuration
-DEBUG = config.debug()
-
 # instantiate the app
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.secret_key = config.app_secret_key()
+app.debug = config.debug()
 
 # enable CORS
 CORS(app, resources={r'/*': {'origins': '*'}})
@@ -50,6 +49,28 @@ def get_files():
             return jsonify(filenames)
 
 
+@app.route('/images', methods=['GET'])
+def get_image_names():
+    if request.method == 'GET':
+        image_names = get_all_files_s3(s3_image_bucket())
+        if len(image_names) == 0:
+            flash('No images')
+            return make_response(jsonify({'result': 'no images'}))
+        else:
+            return jsonify(image_names)
+
+
+@app.route('/images/<image_name>', methods=['GET'])
+def get_image(image_name):
+    if request.method == 'GET':
+        if image_name not in get_all_files_s3(s3_image_bucket()):
+            flash('Image cannot be found')
+            return make_response(jsonify({'result': 'Image cannot be found'}))
+
+        # function from aws_helper.py
+        return get_image_url(image_name)
+
+
 @app.route('/files/<filename>', methods=['DELETE'])
 def delete_file(filename):
     if request.method == 'DELETE':
@@ -59,7 +80,7 @@ def delete_file(filename):
         output = delete_file_s3(filename, s3_file_bucket())
 
         return make_response(jsonify(
-            {'result': 'success, {} deleted!'.format(output)}
+            {'result': 'success, {}'.format(output)}
         ))
 
 
@@ -69,7 +90,7 @@ def get_plot(filename):
         if filename not in get_all_files_s3(s3_file_bucket()):
             flash('File does not exist')
             return make_response(jsonify({'result': 'File does not exist.'}))
-        file_url = get_filename(filename)
+        file_url = get_file_url(filename)
 
         image = SIMPLS_Chart(file_url, filename)
 

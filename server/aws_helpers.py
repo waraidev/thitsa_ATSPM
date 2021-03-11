@@ -19,8 +19,12 @@
 #     return (S3 Secret Key)
 #
 #
-# def s3_location():
-#     return "https://%s.s3.amazonaws.com/" % s3_bucket()
+# def s3_file_location():
+#     return "https://{}.s3.amazonaws.com/".format(s3_file_bucket())
+#
+#
+# def s3_image_location():
+#     return "https://{}.s3.amazonaws.com/".format(s3_image_bucket())
 #
 #
 # def app_secret_key():
@@ -72,7 +76,7 @@ def upload_file_s3(file, bucket_name, filename=None, content_type="image/png", a
         print("File didn't upload: ", e)
         return e
 
-    return "{}{}".format(config.s3_location(), filename)
+    return get_file_url(filename)
 
 
 def delete_file_s3(filename, bucket_name):
@@ -93,5 +97,9 @@ def get_all_files_s3(bucket_name):
     return [file['Key'] for file in bucket['Contents']]
 
 
-def get_filename(filename):
-    return "{}{}".format(config.s3_location(), filename)
+def get_file_url(filename):
+    return "{}{}".format(config.s3_file_location(), filename)
+
+
+def get_image_url(image_name):
+    return "{}{}".format(config.s3_image_location(), image_name)

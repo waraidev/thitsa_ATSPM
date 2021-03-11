@@ -37,10 +37,10 @@ export default {
       console.log(`Uploaded ${file.name}`);
     },
     async onFileRemove(file) {
-      await this.$http.delete(
+      let output = await this.$http.delete(
           `${API_URL}files/${file['name']}`,
       ).then(() => {
-        console.log(`${file['name']} has been deleted!`);
+        console.log(output);
       }).catch((error) => {
         console.error(error);
       });

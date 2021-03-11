@@ -25,7 +25,7 @@
 <script>
 import axios from 'axios';
 
-const path = 'http://localhost:5000/'
+const path = 'http://localhost:5000/';
 
 export default {
   name: 'Analysis',
@@ -63,7 +63,7 @@ export default {
           let calc_time = ((end - start) * 0.001).toPrecision(5);
           this.completionTime = `It took ${calc_time} seconds to complete SIMPLS!`;
 
-          console.log("SIMPLS Finished!")
+          console.log("SIMPLS Finished!");
         }).catch((error) => {
           this.error = error;
           this.loading = false;
