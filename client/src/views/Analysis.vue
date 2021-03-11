@@ -50,6 +50,7 @@ export default {
         });
     },
     showChart(filename) {
+      this.error = '';
       this.buttonClicked = true;
       this.loading = true;
       let start = performance.now();
@@ -65,6 +66,7 @@ export default {
           console.log("SIMPLS Finished!")
         }).catch((error) => {
           this.error = error;
+          this.loading = false;
           console.error(error);
       });
     },

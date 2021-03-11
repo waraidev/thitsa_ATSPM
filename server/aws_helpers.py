@@ -4,8 +4,11 @@
 # import uuid as key
 #
 #
-# def s3_bucket():
-#     return (S3 Bucket)
+# def s3_file_bucket():
+#     return (S3 File Bucket)
+#
+# def s3_image_bucket():
+#     return (S3 Image Bucket)
 #
 #
 # def s3_access_key_id():
@@ -43,23 +46,33 @@ s3 = boto3.client(
 )
 
 
-def upload_file_s3(file, bucket_name, acl="public-read"):
+def get_signal_name(filename):
+    signal_index = filename.find("signalID_")
+    signal = filename[signal_index + 9:signal_index + 9 + 4]
+    return "signal" + signal + ".png"
+
+
+def upload_file_s3(file, bucket_name, filename=None, content_type="image/png", acl="public-read"):
     # Docs: http://boto3.readthedocs.io/en/latest/guide/s3.html
+    if filename is None:
+        filename = file.filename
+        content_type = file.content_type
+
     try:
         s3.upload_fileobj(
             file,
             bucket_name,
-            file.filename,
+            filename,
             ExtraArgs={
                 "ACL": acl,
-                "ContentType": file.content_type
+                "ContentType": content_type
             }
         )
     except Exception as e:
         print("File didn't upload: ", e)
         return e
 
-    return "{}{}".format(config.s3_location(), file.filename)
+    return "{}{}".format(config.s3_location(), filename)
 
 
 def delete_file_s3(filename, bucket_name):

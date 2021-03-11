@@ -1,9 +1,11 @@
 from flask import Flask, jsonify, request, flash, make_response
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
+from io import BytesIO
+import base64
 
-from aws_helpers import upload_file_s3, get_all_files_s3, delete_file_s3, get_filename
-from config import s3_bucket
+from aws_helpers import upload_file_s3, get_all_files_s3, delete_file_s3, get_filename, get_signal_name
+from config import s3_file_bucket, s3_image_bucket
 import config
 from simpls.SIMPLS import SIMPLS_Chart
 
@@ -31,7 +33,7 @@ def upload_file():
         return make_response(jsonify({'result': 'no file selected'}))
     if file:
         file.filename = secure_filename(file.filename)
-        output = upload_file_s3(file, s3_bucket())
+        output = upload_file_s3(file, s3_file_bucket())
         flash('File successfully uploaded')
         return make_response(jsonify({'result': 'success, {}'.format(output)}))
 
@@ -39,7 +41,7 @@ def upload_file():
 @app.route('/files', methods=['GET'])
 def get_files():
     if request.method == 'GET':
-        filenames = get_all_files_s3(s3_bucket())
+        filenames = get_all_files_s3(s3_file_bucket())
         if len(filenames) == 0:
             flash('No files')
             return make_response(jsonify({'result': 'no files'}))
@@ -51,10 +53,10 @@ def get_files():
 @app.route('/files/<filename>', methods=['DELETE'])
 def delete_file(filename):
     if request.method == 'DELETE':
-        if filename not in get_all_files_s3(s3_bucket()):
+        if filename not in get_all_files_s3(s3_file_bucket()):
             flash('File does not exist')
             return make_response(jsonify({'result': 'File does not exist.'}))
-        output = delete_file_s3(filename, s3_bucket())
+        output = delete_file_s3(filename, s3_file_bucket())
 
         return make_response(jsonify(
             {'result': 'success, {} deleted!'.format(output)}
@@ -64,11 +66,17 @@ def delete_file(filename):
 @app.route('/plot/<filename>', methods=['GET'])
 def get_plot(filename):
     if request.method == 'GET':
-        if filename not in get_all_files_s3(s3_bucket()):
+        if filename not in get_all_files_s3(s3_file_bucket()):
             flash('File does not exist')
             return make_response(jsonify({'result': 'File does not exist.'}))
         file_url = get_filename(filename)
-        return SIMPLS_Chart(file_url, filename)
+
+        image = SIMPLS_Chart(file_url, filename)
+
+        image_file = BytesIO(base64.b64decode(image[22:]))
+        upload_file_s3(image_file, s3_image_bucket(), get_signal_name(filename))
+
+        return image
 
 
 if __name__ == '__main__':

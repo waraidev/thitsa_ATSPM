@@ -77,7 +77,6 @@ def SIMPLS_Chart(csv_url, filename):
 
     return image_b64_str
 
-
 # Displaying Downloadable CSV files
 
 # import pandas as pd
