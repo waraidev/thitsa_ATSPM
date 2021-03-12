@@ -46,5 +46,6 @@ def port():
     return PORT
     
 ```
+This file will be used to insert all of your AWS data, but it is not included in Git so that the security of the AWS data is uncompromised.
 
 This project is a collaboration between [Mercer University](https://www.mercer.edu) and [Georgia Institute of Technology](https://www.gatech.edu).
