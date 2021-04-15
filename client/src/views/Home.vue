@@ -1,7 +1,7 @@
 <template>
   <div id="home">
     <div id="welcome">
-      <h1 class="rounded" style="background-color: dimgray">Welcome the GDOT ATSPM Analysis Web Engine!</h1>
+      <h1 class="rounded" style="background-color: dimgray">Welcome to the GDOT ATSPM Analysis Web Engine!</h1>
     </div>
     <div id="click-files">
       <h4 class="rounded">Click below or in the navigation bar to upload files and analyze them!</h4>

@@ -15,7 +15,7 @@ def find_indexes(series, dates):
     return idx
 
 
-# 'file_body' is the CSV file from Amazon S3
+# 'file_url' is the CSV file from Amazon S3
 def reshape(file_url):
     df = pd.read_csv(file_url, skiprows=2)
 

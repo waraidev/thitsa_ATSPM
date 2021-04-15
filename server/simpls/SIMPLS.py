@@ -49,10 +49,10 @@ def SIMPLS_Chart(csv_url, filename):
 
     # Plot the prediction versus actual
     [rowsZ, colsZ] = np.shape(Z)
-    TimeZ = [i * 0.25 * 0.25 for i in range(colsZ)]
+    TimeZ = [i * 0.25 for i in range(colsZ)]
 
     [rowsY, colsY] = np.shape(Y)
-    TimeY = [(i + colsZ) * 0.25 * 0.25 for i in range(colsY)]
+    TimeY = [(i + colsZ) * 0.25 for i in range(colsY)]
 
     Time = np.concatenate((TimeZ, TimeY))
 
