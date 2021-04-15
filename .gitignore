@@ -1,5 +1,6 @@
 .DS_Store
 client/node_modules
+server/node_modules
 /dist
 
 # local env and venv files
@@ -7,6 +8,7 @@ client/node_modules
 .env.*.local
 server/venv
 server/config.py
+server/.serverless
 
 # Python-specific
 __pycache__
