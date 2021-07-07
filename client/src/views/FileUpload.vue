@@ -25,7 +25,8 @@
 import vue2Dropzone from 'vue2-dropzone';
 import 'vue2-dropzone/dist/vue2Dropzone.min.css';
 
-const API_URL = 'http://localhost:5000/';
+// Change to 'http://localhost:5000/' if endpoint doesn't work.
+const API_URL = 'https://s0g8xuigid.execute-api.us-east-1.amazonaws.com/dev/';
 
 export default {
   name: 'FileUpload',

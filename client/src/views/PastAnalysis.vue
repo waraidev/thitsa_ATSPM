@@ -34,7 +34,8 @@
 <script>
 import axios from "axios";
 
-const path = 'http://localhost:5000/';
+// Change to 'http://localhost:5000/' if endpoint doesn't work.
+const path = 'https://s0g8xuigid.execute-api.us-east-1.amazonaws.com/dev/';
 
 export default {
 name: "PastAnalysis",
